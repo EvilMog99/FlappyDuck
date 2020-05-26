@@ -1,0 +1,4 @@
+Run:
+git add .
+git commit -m "message"
+git push "https://github.com/EvilMog99/FlappyDuck.git" HEAD:master

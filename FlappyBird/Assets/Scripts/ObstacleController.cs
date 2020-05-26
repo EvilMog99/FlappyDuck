@@ -22,12 +22,10 @@ public class ObstacleController : MonoBehaviour
     void Start()
     {
         //Load prefabs in
-        allBottomObstaclePrefabs = new GameObject[1];
-        allBottomObstaclePrefabs[0] = Resources.Load("Prefabs/AllBottomObstacles/Obstacle0") as GameObject;
+        allBottomObstaclePrefabs = loadPrefabArrays("Prefabs/AllBottomObstacles/", new string[] { "BottomObstacle0", "BottomObstacle1", "BottomObstacle2", "BottomObstacle3" });
         Debug.Log("Loaded Bottom: " + allBottomObstaclePrefabs.Length);
 
-        allTopObstaclePrefabs = new GameObject[1];
-        allTopObstaclePrefabs[0] = Resources.Load("Prefabs/AllTopObstacles/Obstacle0") as GameObject;
+        allTopObstaclePrefabs = loadPrefabArrays("Prefabs/AllTopObstacles/", new string[] { "TopObstacle0", "TopObstacle1", "TopObstacle2", "TopObstacle3" });
         Debug.Log("Loaded Top: " + allTopObstaclePrefabs.Length);
 
 
@@ -45,6 +43,16 @@ public class ObstacleController : MonoBehaviour
             preppedTopObstacles[i].GetComponent<ObstacleScript>().setStartEndPoints(startPointTop.position, endPointTop.position, interpolationMaxVal);
         }
 
+    }
+
+    private GameObject[] loadPrefabArrays(string dir, string[] allPrefabNames)
+    {
+        GameObject[] arrToPopulate = new GameObject[allPrefabNames.Length];
+        for (int i = 0; i < allPrefabNames.Length; i++)
+        {
+            arrToPopulate[i] = Resources.Load(dir + allPrefabNames[i]) as GameObject;
+        }
+        return arrToPopulate;
     }
 
     // Update is called once per frame
