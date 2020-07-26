@@ -1,21 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     public float MaxTimeTillJump = 1.5f;
     private float timeTillCanJump = 0f;
-    private bool gameRunning = true;
-
+    
     Rigidbody rig;
     MenuEvents menuEventsScript;
     public GameObject endGamePanel;
     public GameObject continueButton;
+    public GameObject newHighScoreMessage;
+    public Text highScoreValue;
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         if (endGamePanel == null) Debug.Log("Failed to load menu!");
         menuEventsScript = GameObject.Find("Canvas").GetComponent<MenuEvents>();
         rig = gameObject.GetComponent<Rigidbody>();
@@ -26,7 +30,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W) && gameRunning && timeTillCanJump >= MaxTimeTillJump)
+        if (Input.GetKeyDown(KeyCode.W) && gameManager.isGameRunning() && timeTillCanJump >= MaxTimeTillJump)
         {
             rig.velocity = new Vector3(rig.velocity.x, 10f, rig.velocity.z);
             timeTillCanJump = 0f;
@@ -39,7 +43,7 @@ public class PlayerController : MonoBehaviour
     public void hitObstacle(string obstacleTag)
     {
         MaxTimeTillJump = 1000000f;
-        gameRunning = false;
+        gameManager.setGameRunning(false);
         Debug.Log("Hit player");
     }
 
@@ -56,6 +60,11 @@ public class PlayerController : MonoBehaviour
             menuEventsScript.togglePause(true);
             menuEventsScript.SetGUIInvisibile(continueButton);
             menuEventsScript.OpenMenu(endGamePanel);
+            if (gameManager.testScore())
+            {
+                highScoreValue.text = gameManager.getPlayerScore().ToString();
+                newHighScoreMessage.SetActive(true);
+            }
         }
     }
 
@@ -68,4 +77,5 @@ public class PlayerController : MonoBehaviour
     {
 
     }
+
 }
